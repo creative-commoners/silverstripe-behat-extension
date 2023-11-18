@@ -64,7 +64,7 @@ class EmailContext implements Context
      */
     public function thereIsAnEmailFromTo($negate, $direction, $email)
     {
-        $to = ($direction == 'to') ? $email : null;
+        $to = ($direction == 'to') ? $email : '';
         $from = ($direction == 'from') ? $email : null;
         $match = $this->mailer->findEmail($to, $from);
         if (trim($negate ?? '')) {
@@ -84,7 +84,7 @@ class EmailContext implements Context
      */
     public function thereIsAnEmailFromToTitled($negate, $direction, $email, $subject)
     {
-        $to = ($direction == 'to') ? $email : null;
+        $to = ($direction == 'to') ? $email : '';
         $from = ($direction == 'from') ? $email : null;
         $match = $this->mailer->findEmail($to, $from, $subject);
         $allMails = $this->mailer->findEmails($to, $from);
