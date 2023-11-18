@@ -133,10 +133,6 @@ trait DebugTools
     {
         // Validate driver
         $driver = $this->getSession()->getDriver();
-        if (!($driver instanceof FacebookWebDriver)) {
-            $this->logMessage('ScreenShots are only supported for FacebookWebDriver: skipping');
-            return;
-        }
         $feature = $event->getFeature();
         $step = $event->getStep();
         $path = $this->prepareScreenshotPath();
