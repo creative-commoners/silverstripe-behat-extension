@@ -79,6 +79,10 @@ abstract class SilverStripeContext extends MinkContext implements SilverStripeAw
      */
     protected $xpathEscaper;
 
+    private int $screenWidth = 1024;
+
+    private int $screenHeight = 768;
+
     /**
      * Initializes context.
      * Every scenario gets it's own context object.
@@ -266,10 +270,10 @@ abstract class SilverStripeContext extends MinkContext implements SilverStripeAw
 
         if ($screenSize = Environment::getEnv('BEHAT_SCREEN_SIZE')) {
             list($screenWidth, $screenHeight) = explode('x', $screenSize ?? '');
-            $this->getSession()->resizeWindow((int)$screenWidth, (int)$screenHeight);
-        } else {
-            $this->getSession()->resizeWindow(1024, 768);
+            $this->screenWidth = (int)$screenWidth;
+            $this->screenHeight = (int)$screenHeight;
         }
+        $this->getSession()->resizeWindow($this->screenWidth, $this->screenHeight);
 
         // Reset everything
         foreach (ClassInfo::implementorsOf(Resettable::class) as $class) {
@@ -620,5 +624,50 @@ abstract class SilverStripeContext extends MinkContext implements SilverStripeAw
 			})(jQuery);
 EOS;
         $this->getSession()->getDriver()->executeScript($script);
+    }
+
+    /**
+     * Set the screen to a specific width, using the default height.
+     *
+     * Example: Given I set the screen width to 500px
+     *
+     * @Given /^I set the screen width to ([\d]+)px$/
+     */
+    public function setScreenWidth($width)
+    {
+        $this->getSession()->resizeWindow($width, $this->screenHeight);
+    }
+
+    /**
+     * Set the screen to a specific height, using the default width.
+     * Example: Given I set the screen height to 500px
+     *
+     * @Given /^I set the screen height to ([\d]+)px$/
+     */
+    public function setScreenHeight($height)
+    {
+        $this->getSession()->resizeWindow($this->screenWidth, $height);
+    }
+
+    /**
+     * Set the screen to a specific width and height.
+     * Example: Given I set the screen size to 1024px by 768px
+     *
+     * @Given /^I set the screen size to ([\d]+)px by ([\d]+)px$/
+     */
+    public function setScreenSize($width, $height)
+    {
+        $this->getSession()->resizeWindow($width, $height);
+    }
+
+    /**
+     * Reset the screen size to what it was at the start of the test
+     * Example: Given I reset the screen size
+     *
+     * @Given /^I reset the screen size$/
+     */
+    public function resetScreenSize()
+    {
+        $this->getSession()->resizeWindow($this->screenWidth, $this->screenHeight);
     }
 }
