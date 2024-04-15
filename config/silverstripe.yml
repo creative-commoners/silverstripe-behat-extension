@@ -8,6 +8,7 @@ parameters:
   silverstripe_extension.ajax_steps: ~
   silverstripe_extension.ajax_timeout: ~
   silverstripe_extension.admin_url: ~
+  silverstripe_extension.is_ci: ~
   silverstripe_extension.login_url: ~
   silverstripe_extension.screenshot_path: ~
   silverstripe_extension.module:
