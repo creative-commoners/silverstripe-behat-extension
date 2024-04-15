@@ -18,6 +18,9 @@ use Behat\Testwork\ServiceContainer\Extension as ExtensionInterface;
 use RuntimeException;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
+use Behat\Behat\Tester\ServiceContainer\TesterExtension;
+use SilverStripe\BehatExtension\Utility\RerunTotalStatistics;
+use SilverStripe\BehatExtension\Utility\RerunRuntimeSuiteTester;
 
 /*
  * This file is part of the SilverStripe\BehatExtension
@@ -98,6 +101,22 @@ class Extension implements ExtensionInterface
              $container->setParameter('silverstripe_extension.region_map', $config['region_map']);
         }
         $container->setParameter('silverstripe_extension.bootstrap_file', $config['bootstrap_file']);
+        $container->setParameter('silverstripe_extension.is_ci', $config['is_ci']);
+
+        // When running in CI, behat scenarios will occasionally sporadically fail
+        // Replaces services with custom implementations that will rerun failed features
+        // Note that features rather than scenarios need to be rerun to ensure that
+        // everything is setup and torn down correctly and that "Background" bits of
+        // feature fits are rerun
+        if ($config['is_ci']) {
+            $definition = new Definition(RerunRuntimeSuiteTester::class, array(
+                new Reference(TesterExtension::SPECIFICATION_TESTER_ID)
+            ));
+            $container->setDefinition(TesterExtension::SUITE_TESTER_ID, $definition);
+
+            $definition = new Definition(RerunTotalStatistics::class);
+            $container->setDefinition('output.pretty.statistics', $definition);
+        }
     }
 
     /**
@@ -139,6 +158,9 @@ class Extension implements ExtensionInterface
                 scalarNode('retry_seconds')->
                     info('Number of seconds that @retry tags will retry for')->
                     defaultValue(2)->
+                end()->
+                scalarNode('is_ci')->
+                    defaultValue(false)->
                 end()->
                 arrayNode('ajax_steps')->
                     defaultValue(array(
