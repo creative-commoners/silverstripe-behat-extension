@@ -183,10 +183,10 @@ class RetryableCallHandler implements CallHandler
             return false;
         }
         $feature = $call->getFeature();
-        if ($feature->hasTag(self::RETRY_TAG)) {
+        if ($feature->hasTag(RetryableCallHandler::RETRY_TAG)) {
             return true;
         }
         $scenario = $this->getStepScenario($feature, $call->getStep());
-        return $scenario && $scenario->hasTag(self::RETRY_TAG);
+        return $scenario && $scenario->hasTag(RetryableCallHandler::RETRY_TAG);
     }
 }
