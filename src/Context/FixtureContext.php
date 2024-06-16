@@ -379,7 +379,7 @@ class FixtureContext implements Context
      */
     public function stepIAssignObjToObj($type, $value, $relationType, $relationId)
     {
-        self::stepIAssignObjToObjInTheRelation($type, $value, $relationType, $relationId, null);
+        FixtureContext::stepIAssignObjToObjInTheRelation($type, $value, $relationType, $relationId, null);
     }
 
     /**
