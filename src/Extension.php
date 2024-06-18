@@ -51,7 +51,7 @@ class Extension implements ExtensionInterface
     */
     public function getConfigKey()
     {
-        return self::SILVERSTRIPE_ID;
+        return Extension::SILVERSTRIPE_ID;
     }
 
     public function initialize(ExtensionManager $extensionManager)
