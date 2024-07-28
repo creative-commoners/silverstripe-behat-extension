@@ -1182,11 +1182,35 @@ JS;
     }
 
     /**
+     * @Given /^I scroll to the bottom of the edit form panel$/
+     */
+    public function iScrollToTheBottomOfTheEditFormPanel()
+    {
+        $javascript = implode('', [
+            "var el = document.querySelector('.cms #Form_EditForm > .panel,.cms #Form_ItemEditForm > .panel');",
+            "el.scrollTo(0, Math.max(el.scrollHeight, el.scrollHeight, el.clientHeight));",
+        ]);
+        $this->getSession()->executeScript($javascript);
+    }
+
+    /**
      * @Given /^I scroll to the top$/
      */
     public function iScrollToTop()
     {
         $this->getSession()->executeScript('window.scrollTo(0,0);');
+    }
+
+    /**
+     * @Given /^I scroll to the top of the edit form panel$/
+     */
+    public function iScrollToTheTopOfTheEditFormPanel()
+    {
+        $javascript = implode('', [
+            "var el = document.querySelector('.cms #Form_EditForm > .panel,.cms #Form_ItemEditForm > .panel');",
+            "el.scrollTo(0, 0);",
+        ]);
+        $this->getSession()->executeScript($javascript);
     }
 
     /**
