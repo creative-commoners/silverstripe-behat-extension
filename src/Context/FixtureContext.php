@@ -23,7 +23,6 @@ use SilverStripe\Dev\FixtureBlueprint;
 use SilverStripe\Dev\FixtureFactory;
 use SilverStripe\Dev\YamlFixture;
 use SilverStripe\ORM\Connect\TempDatabase;
-use SilverStripe\ORM\DataExtension;
 use SilverStripe\ORM\DataObject;
 use SilverStripe\ORM\DB;
 use SilverStripe\Security\Group;
@@ -692,6 +691,8 @@ class FixtureContext implements Context
     }
 
     /**
+     * Adds an extension and runs dev/build?flush
+     *
      * @param $extension
      * @param $class
      *
@@ -699,11 +700,31 @@ class FixtureContext implements Context
      */
     public function iAddAnExtensionToTheClass($extension, $class)
     {
+        $this->iAddAnExtensionToTheClassInner($extension, $class, false);
+    }
+
+    /**
+     * Adds an extension, but doesn't run dev/build afterwards. Will still run ?flush
+     *
+     * @param $extension
+     * @param $class
+     *
+     * @Given I add an extension :extension to the :class class without dev-build
+     */
+    public function iAddAnExtensionToTheClassWithoutDevBuild(string $extension, string $class): void
+    {
+        $this->iAddAnExtensionToTheClassInner($extension, $class, true);
+    }
+
+    private function iAddAnExtensionToTheClassInner(string $extension, string $class, bool $flushOnly)
+    {
+
         // Validate the extension
         Assert::assertTrue(
             class_exists($extension ?? '') && is_subclass_of($extension, Extension::class),
             'Given extension does not extend Extension'
         );
+        /** @var Extension $extension */
 
         // Add the extension to the CLI context
         /** @var Extensible $targetClass */
@@ -741,8 +762,8 @@ YAML;
         // Remember to cleanup...
         $this->activatedConfigFiles[] = $destPath;
 
-        // Flush website. We'll need to dev/build too if it's a DataExtension
-        if (is_subclass_of($extension, DataExtension::class)) {
+        // Flush website. We'll need to dev/build too if it's a DataObject
+        if (is_subclass_of($targetClass, DataObject::class) && !$flushOnly) {
             $this->getMainContext()->visit('/dev/build?flush');
         } else {
             $this->getMainContext()->visit('/?flush');
