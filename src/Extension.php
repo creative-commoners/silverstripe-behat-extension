@@ -22,6 +22,9 @@ use Symfony\Component\DependencyInjection\Reference;
 use Behat\Behat\Tester\ServiceContainer\TesterExtension;
 use SilverStripe\BehatExtension\Utility\RerunTotalStatistics;
 use SilverStripe\BehatExtension\Utility\RerunRuntimeSuiteTester;
+use PHPUnit\TextUI\CliArguments\Builder;
+use PHPUnit\TextUI\Configuration\Registry;
+use PHPUnit\TextUI\XmlConfiguration\DefaultConfiguration;
 
 /*
  * This file is part of the SilverStripe\BehatExtension
@@ -76,6 +79,11 @@ class Extension implements ExtensionInterface
         if (!$found) {
             throw new RuntimeException('Could not find PHPUnit installation');
         }
+
+        // Need to init phpunit app registry to get phpunit exporter to work
+        $cliConfiguration = (new Builder)->fromParameters([]);
+        $xmlConfiguration = DefaultConfiguration::create();
+        Registry::init($cliConfiguration, $xmlConfiguration);
     }
 
     public function load(ContainerBuilder $container, array $config)

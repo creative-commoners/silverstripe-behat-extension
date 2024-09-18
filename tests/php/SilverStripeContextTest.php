@@ -40,7 +40,7 @@ class SilverStripeContextTest extends SapphireTest
         $context->getSession()->getPage()
             ->expects($this->any())
             ->method('find')
-            ->will($this->returnValue($this->getElementMock()));
+            ->willReturn($this->getElementMock());
         $obj = $context->getRegionObj('.some-selector');
         $this->assertNotNull($obj);
     }
@@ -52,9 +52,9 @@ class SilverStripeContextTest extends SapphireTest
         $context->getSession()->getPage()
             ->expects($this->any())
             ->method('find')
-            ->will($this->returnCallback(function ($type, $selector) use ($el) {
+            ->willReturnCallback(function ($type, $selector) use ($el) {
                 return ($selector == '.my-region') ? $el : null;
-            }));
+            });
         $context->setRegionMap(array('MyRegion' => '.my-asdf'));
         $obj = $context->getRegionObj('.my-region');
         $this->assertNotNull($obj);
@@ -67,18 +67,18 @@ class SilverStripeContextTest extends SapphireTest
     {
         $pageMock = $this->getMockBuilder(DocumentElement::class)
             ->disableOriginalConstructor()
-            ->setMethods(array('find'))
+            ->onlyMethods(array('find'))
             ->getMock();
         $sessionMock = $this->getMockBuilder(Session::class)
             ->setConstructorArgs(array(
                 $this->getMockBuilder(DriverInterface::class)->getMock(),
                 $this->getMockBuilder(SelectorsHandler::class)->getMock()
             ))
-            ->setMethods(array('getPage'))
+            ->onlyMethods(array('getPage'))
             ->getMock();
         $sessionMock->expects($this->any())
             ->method('getPage')
-            ->will($this->returnValue($pageMock));
+            ->willReturn($pageMock);
         $mink = new Mink(array('default' => $sessionMock));
         $mink->setDefaultSessionName('default');
 
