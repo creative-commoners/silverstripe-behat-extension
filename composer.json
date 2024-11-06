@@ -28,6 +28,7 @@
         "behat/mink": "^1.10.0",
         "friends-of-behat/mink-extension": "^2",
         "silverstripe/mink-facebook-web-driver": "^2",
+        "silverstripe/template-engine": "^1",
         "symfony/dom-crawler": "^7.0",
         "silverstripe/testsession": "^4",
         "silverstripe/framework": "^6",

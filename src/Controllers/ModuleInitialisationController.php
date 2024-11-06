@@ -15,7 +15,7 @@ use Behat\Testwork\Suite\SuiteRepository;
 use Exception;
 use SilverStripe\Core\Manifest\Module;
 use SilverStripe\Model\ArrayData;
-use SilverStripe\View\SSTemplateEngine;
+use SilverStripe\TemplateEngine\SSTemplateEngine;
 use SilverStripe\View\ViewLayerData;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
