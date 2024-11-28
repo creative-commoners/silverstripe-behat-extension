@@ -89,7 +89,7 @@ abstract class SilverStripeContext extends MinkContext implements SilverStripeAw
      *
      * @param   array   $parameters     context parameters (set them up through behat.yml)
      */
-    public function __construct(array $parameters = null)
+    public function __construct(?array $parameters = null)
     {
         if (!preg_match('#[\\\]FeatureContext$#', get_class($this))) {
             throw new InvalidArgumentException(
