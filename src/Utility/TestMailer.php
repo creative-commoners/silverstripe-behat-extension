@@ -31,7 +31,7 @@ class TestMailer extends BaseTestMailer
         $this->testSessionEnvironment = TestSessionEnvironment::singleton();
     }
 
-    public function send(RawMessage $message, Envelope $envelope = null): void
+    public function send(RawMessage $message, ?Envelope $envelope = null): void
     {
         parent::send($message, $envelope);
         /** @var Email $email */

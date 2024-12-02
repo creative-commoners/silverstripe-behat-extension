@@ -165,7 +165,7 @@ class Extension implements ExtensionInterface
                 end()->
                 scalarNode('error_reporting')->
                     info('Call executor will catch exceptions matching this level')->
-                    defaultValue(E_ALL | E_STRICT)->
+                    defaultValue(E_ALL)->
                 end()->
                 scalarNode('retry_seconds')->
                     info('Number of seconds that @retry tags will retry for')->
