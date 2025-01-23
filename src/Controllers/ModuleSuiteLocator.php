@@ -18,6 +18,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Yaml\Parser;
+use SilverStripe\i18n\i18n;
+use SilverStripe\SupportedModules\MetaData;
+use SilverStripe\Core\Path;
 
 /**
  * Locates test suite configuration based on module name.
@@ -141,6 +144,10 @@ class ModuleSuiteLocator implements Controller
             $config['type'],
             $config['settings']
         );
+
+        // Set i18n locale
+        $this->setI18nLocale($config);
+
         return null;
     }
 
@@ -189,5 +196,31 @@ class ModuleSuiteLocator implements Controller
             'type' => null,
             'settings' => $resolvedConfig,
         ];
+    }
+
+    private function setI18nLocale(array $config): void
+    {
+        $path = $config['settings']['paths'][0] ?? '';
+        $packagistName = '';
+        if (preg_match('#(^|/)vendor/([^/]+/[^/]+)/.+#', $path, $matches)) {
+            // Running behat tests of a module in the vendor folder
+            $packagistName = $matches[2];
+        } else {
+            // Running behat tests of a module or project in the root folder
+            $file = Path::join(BASE_PATH, 'composer.json');
+            if (file_exists($file)) {
+                $json = json_decode(file_get_contents($file), true);
+                $packagistName = $json['name'] ?? '';
+            }
+        }
+        $metaData = MetaData::getMetaDataByPackagistName($packagistName);
+        $isSupportedModule = !empty($metaData);
+        if ($isSupportedModule) {
+            // Anything that is in silverstripe/supported-module has behat tests in en_US
+            // Update the default_locale config in case in case any config at the project level or any
+            // installed optional module has set it to a non-en_US locale
+            i18n::config()->set('default_locale', 'en_US');
+            i18n::set_locale('en_US');
+        }
     }
 }
