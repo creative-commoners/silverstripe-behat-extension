@@ -17,6 +17,8 @@ class SilverStripeContextTest extends SapphireTest
 
     protected $backupGlobals = false;
 
+    protected bool $doSetSupportedModuleLocaleToUS = false;
+
     public function testGetRegionObjThrowsExceptionOnUnknownSelector()
     {
         $this->expectException(\LogicException::class);
