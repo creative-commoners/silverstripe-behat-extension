@@ -754,6 +754,15 @@ for example to cast any argument matching the `\d` regex into an actual PHP inte
  [strtotime()](http://www.php.net/manual/en/datetime.formats.relative.php). Example: "the datetime of 2 days ago" might
  return "2013-10-10 23:00:00" if its currently the 12th of October 2013.
 
+### Disabling sudo mode
+
+The activate mode sudo extension will disable sudo mode so that you do not need to re-enter your password for any
+data protected by sudo mode.
+
+```cucumber
+    Given I add an extension "SilverStripe\BehatExtension\Extensions\ActivateSudoModeServiceExtension" to the "SilverStripe\Security\SudoMode\SudoModeService" class
+```
+
 ## Useful resources
 
 * [Silverstripe CMS architecture](https://docs.silverstripe.org/sapphire/en/trunk/reference/cms-architecture)
