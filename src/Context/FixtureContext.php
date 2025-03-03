@@ -989,20 +989,8 @@ YAML;
         $inputField->getParent()->find('css', 'iframe')->click();
         $inputFieldId = $inputField->getAttribute('id');
         $js = <<<JS
-        var editor = jQuery('#$inputFieldId').entwine('ss').getEditor(),
-            doc = editor.getInstance().getDoc(),
-            sel = doc.getSelection(),
-            rng = new Range(),
-            matched = false;
-
-        jQuery(doc).find("$select").each(function() {
-            if(!matched) {
-                rng.selectNode(this);
-                sel.removeAllRanges();
-                sel.addRange(rng);
-                matched = true;
-            }
-        });
+        const editor = jQuery('#$inputFieldId').entwine('ss').getEditor();
+        editor.selectByCssSelector("$select");
         JS;
         $this->getMainContext()->getSession()->executeScript($js);
     }
