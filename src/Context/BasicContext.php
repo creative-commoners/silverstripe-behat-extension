@@ -11,6 +11,7 @@ use Behat\Behat\Hook\Scope\AfterStepScope;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Behat\Hook\Scope\BeforeStepScope;
 use Behat\Mink\Driver\Selenium2Driver;
+use Behat\Mink\Element\ElementInterface;
 use Behat\Mink\Element\NodeElement;
 use Behat\Mink\Exception\ElementNotFoundException;
 use Behat\Mink\Session;
@@ -375,18 +376,19 @@ JS;
      * @param string $title
      * @return NodeElement|null
      */
-    protected function findNamedButton($title)
+    public function findNamedButton($title, ?ElementInterface $parent = null)
     {
-        $page = $this->getSession()->getPage();
+        if ($parent === null) {
+            $parent = $this->getSession()->getPage();
+        }
         // See https://mathiasbynens.be/notes/css-escapes
         $escapedTitle = addcslashes($title ?? '', '!"#$%&\'()*+,-./:;<=>?@[\]^`{|}~');
-        $matchedEl = null;
         $searches = [
             ['named', ['link_or_button', "'{$title}'"]],
             ['css', "button[data-text-alternate='{$escapedTitle}']"],
         ];
         foreach ($searches as list($type, $arg)) {
-            $buttons = $page->findAll($type, $arg);
+            $buttons = $parent->findAll($type, $arg);
             /** @var NodeElement $button */
             foreach ($buttons as $button) {
                 if ($button->isVisible()) {
